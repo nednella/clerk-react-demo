@@ -1,73 +1,25 @@
-# React + TypeScript + Vite
+# Clerk Issue Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Install with the usual `npm i` and copy `.env.template` into `.env` with a populated Clerk key.
 
-Currently, two official plugins are available:
+Run with `npm run dev`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Context
 
-## React Compiler
+This application does not have dedicated routes for login and register functions. Instead, it uses dialogs to render the pre-built `<SignIn />` and `<SignUp />` components (in this case, only the former, as I want to restrict the registration to people who have been given the link to the Clerk accounts portal).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Issue
 
-## Expanding the ESLint configuration
+Upon registering via 3rd party OAuth, the user is redirected back to the application to the path `{URL}/#/sso-callback`.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+As there is no pre-built clerk component that renders on the route `/` by default, the CAPTCHA registration flow gets stuck, as it cannot find a `div` with the property `id="clerk-captcha"`.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+To continue the flow, users have to click the login button again in order to render the dialog with the Clerk component, so that the CAPTCHA can be rendered and completed.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Resolving the issue
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+I know the solution is to render the `<AuthenticateWithRedirectCallback />` component on a specified route, e.g. `{URL}/sso-callback`, but I am unsure on how to do this correctly, which is the point when I reached out.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Clerk dashboard configured paths
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+![alt text](/src/assets/clerk-paths.png)
