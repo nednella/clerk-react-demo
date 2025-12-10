@@ -20,6 +20,9 @@ To continue the flow, users have to click the login button again in order to ren
 
 I know the solution is to render the `<AuthenticateWithRedirectCallback />` component on a specified route, e.g. `{URL}/sso-callback`, but I am unsure on how to do this correctly, which is the point when I reached out.
 
-### Clerk dashboard configured paths
+### Issue on video
 
-![alt text](/src/assets/clerk-paths.png)
+https://github.com/user-attachments/assets/77c11b5e-01e5-4858-96b2-410b438d3310
+
+
+
