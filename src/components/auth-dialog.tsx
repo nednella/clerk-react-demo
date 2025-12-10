@@ -14,7 +14,10 @@ export function AuthDialog() {
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <UnstyledDialogContent aria-describedby={undefined}>
-                <SignIn />
+                <SignIn 
+                    signUpFallbackRedirectUrl="/"
+                    fallbackRedirectUrl="/"
+                />
             </UnstyledDialogContent>
         </Dialog>
     );

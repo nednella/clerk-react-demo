@@ -1,7 +1,8 @@
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { LoginButton } from "./components/login-button";
+import { ClerkProvider } from "@clerk/clerk-react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthDialog } from "./components/auth-dialog";
-import { AccountButton } from "./components/account-button";
+import { Home } from "./pages/home";
+import { SSOCallback } from "./pages/sso-callback";
 
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -11,16 +12,18 @@ if (!CLERK_PUBLISHABLE_KEY) {
 
 function App() {
     return (
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-            <div className="min-h-svh w-full flex items-center justify-center">
-                <SignedOut>
-                    <LoginButton />
-                </SignedOut>
-                <SignedIn>
-                    <AccountButton />
-                </SignedIn>
-            </div>
-            <AuthDialog />
+        <ClerkProvider 
+            publishableKey={CLERK_PUBLISHABLE_KEY}
+            signInFallbackRedirectUrl="/"
+            signUpFallbackRedirectUrl="/"
+        >
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/sso-callback" element={<SSOCallback />} />
+                </Routes>
+                <AuthDialog />
+            </BrowserRouter>
         </ClerkProvider>
     );
 }
