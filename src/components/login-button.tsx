@@ -1,13 +1,13 @@
-import { useAuthDialog } from "@/stores/auth-dialog.store";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 
 export function LoginButton() {
-    const { onOpen: openAuthDialog } = useAuthDialog();
+    const navigate = useNavigate();
 
     return (
         <Button
             className="min-w-24 rounded-full"
-            onClick={() => openAuthDialog()}
+            onClick={() => navigate("/sign-in")}
         >
             Login
         </Button>
